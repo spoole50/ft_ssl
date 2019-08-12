@@ -1,0 +1,51 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    md5Notes.txt                                       :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: spoole <marvin@42.fr>                      +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2019/08/06 16:48:01 by spoole            #+#    #+#              #
+#    Updated: 2019/08/06 17:15:53 by spoole           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+1. Terminology and Notation
+	"Word" = 32-bit quantity
+	"Byte" = 8-bit quantity
+
+2. MD5 Algorithm Description
+	Have a b-bit message as input, and wish to find message digest.
+	B is arbitrary nonnegative integer; b can also be zero, does not need to be multiple of eight, and can be arbitrarily large.
+	Bits of message:
+		m_0 m_1 ... m_{b-1}
+	
+	5 Steps Performed to compute message digest:
+
+	1. Append Padding Bits
+		Message is padded so that the length (in bits) is congruent to 448 % 512. that is, the message is extended so that it is just 64 bits shy of being a multiple of 512.
+		Padding is always performed even if length is already congruent to 448 % 512.
+		Padding:
+			single "1" bit is appended to the message, then "0" bits are appended so that the length in bits of the padded message becomes congruent to 448 % 512
+			At least one bit and at most 512 bits appended.
+			
+	2. Append Length
+		A 64-bit representation of b (the length of the message before padding bits were added) is appended to result of previous step.
+		*in unlikely event b is greater than 2^64, then only the low-order 64 bits of b are used.
+		After this step the length is exact multiple of 512 bits also exact multiple of 16 words
+		
+	3. Initialize MD Buffer
+		A four-word buffer (A,B,C,D) is used to compute the message digest
+		each a 32-bit register intialzed to following values in hexadecimal low-order bytes:
+			word A: 01 23 45 67
+			word B: 89 ab cd ef
+			word C: fe dc ba 98
+			word D: 76 54 32 10
+			
+	4. Process Message in 16-word blocks
+		First define four aux functions that each take as input 3 (32-bit) words and produce as output one 32-bit word
+			F(X,Y,Z) = (X AND Y) OR (not(X) AND Z)
+			G(X,Y,Z) = (X AND Z) OR (Y AND not(Z))
+			H(X,Y,Z) = X xor Y xor Z
+			I(X,Y,Z) = Y xor (X OR not(Z))
+
