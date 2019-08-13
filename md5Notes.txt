@@ -49,3 +49,7 @@
 			H(X,Y,Z) = X xor Y xor Z
 			I(X,Y,Z) = Y xor (X OR not(Z))
 
+	5. Output
+		The message digest produced as output is A, B, C, D
+		Begin with low order byte of A and end with high order byte of D
+

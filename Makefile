@@ -16,7 +16,7 @@ NAME = ft_ssl
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -g
 
-FILES = ft_ssl.c
+FILES = ft_ssl.c t_queue.c
 LIBFT = libft/
 
 all : $(NAME)
