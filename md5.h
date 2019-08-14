@@ -15,12 +15,17 @@
 
 # include "ft_ssl.h"
 
-typedef struct		s_md5
+typedef unsigned char 	BYTE;
+typedef unsigned int	WORD;
+
+
+typedef struct			s_md5
 {
-	UINT4 			state[4];
-	UINT4			count[2];
-	unsigned char	buffer[64];
-}					t_md5;
+	BYTE				buffer[64];
+	WORD				datalen;
+	WORD				state[4];
+	unsigned long long 	bitlen;	
+}						t_md5;
 
 /*
 ** Basic MD5 Functions

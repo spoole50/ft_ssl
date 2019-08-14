@@ -20,8 +20,9 @@
 /*
 ** Algorithms
 */
-# define MD5 0
-# define SHA256 1
+# define num_modes 2
+# define md5	0
+# define sha256	1	
 
 # define false 0
 # define true 1
@@ -42,13 +43,17 @@ typedef struct			s_queue
 	int					index;
 	int					bit_size;
 	int					is_file;
+	int					block_num;
 	char				*name;
+	char				*result;
 	struct s_queue		*next;
 }						t_queue;
 
 typedef struct 			s_ssl
 {
+	int					mode;
 	int					flags;
+	int					numQ;
 	t_queue				*begin;
 }						t_ssl;
 
@@ -69,4 +74,6 @@ void					check_args(t_ssl *ssl, int ac, char **av);
 
 void					q_init(t_queue **begin, char *name, int size, int _is_file);
 void					cleanQ(t_queue *begin);
+void					printQ(t_queue *begin);
+
 #endif
