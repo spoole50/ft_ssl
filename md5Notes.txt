@@ -53,3 +53,5 @@
 		The message digest produced as output is A, B, C, D
 		Begin with low order byte of A and end with high order byte of D
 
+https://security.stackexchange.com/questions/11717/why-are-hash-functions-one-way-if-i-know-the-algorithm-why-cant-i-calculate-t/19658#19658
+https://fthb321.github.io/MD5-Hash/MD5OurVersion2.html
