@@ -20,9 +20,11 @@
 /*
 ** Algorithms
 */
-# define num_modes 2
-# define md5	0
-# define sha256	1	
+# define MODE_NUM 2
+# define MD5 0
+# define SHA256 1
+typedef char	*algorithm(unsigned char *message, int block_num);
+char			*md5(unsigned char *message, int block_num);
 
 # define false 0
 # define true 1
@@ -34,9 +36,6 @@
 # define q_flag 1
 # define r_flag 2
 # define s_flag 3
-
-typedef unsigned short 	UINT2;
-typedef int 			UINT4;
 
 typedef struct			s_queue
 {
@@ -66,6 +65,23 @@ char					*check_stdin(int *size);
 void					parse_flags(t_ssl *ssl, char *s1);
 void					check_file(t_ssl *ssl, char *s1);
 void					check_args(t_ssl *ssl, int ac, char **av);
+
+/*
+**	parse.c
+**	Functions to assist in argument parsing
+*/
+void		parse_flags(t_ssl *ssl, char *s1);
+void		check_file(t_ssl *ssl, char *s1);
+int			get_mode(char *s1);
+void		check_args(t_ssl *ssl, int ac, char **av);
+
+/*
+**	handle.c
+**	Functions that handle argument initialization
+*/
+char		*check_stdin(int *size);
+void		handle_s(t_ssl *ssl, char *s1, int is_arg);
+void		handle_stdin(t_ssl *ssl);
 
 /*
 **	t_queue.c

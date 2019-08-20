@@ -54,17 +54,17 @@ void			queue_add(t_queue **begin, t_queue *temp)
 	}
 }
 
-int				block_calc(int bytes)
+int				block_calc(int bits)
 {
-	int			bits;
 	int			blocks;
 	
 	blocks = 0;
-	bits = bytes * 8;
 	blocks = bits / 512;
 	bits = bits % 512;
-	if (bits >= (448 % 512))
-		blocks++;
+	if (bits < 448)
+		blocks += 1;
+	else if (bits >= 448 % 512)
+		blocks += 2;
 	return (blocks);
 }
 
@@ -80,7 +80,7 @@ void			q_init(t_queue **begin, char *name, int size, int _is_file)
 		err(*begin, "t_queue initialization error");
 	temp->index = 1;
 	temp->bit_size = size * 8;
-	temp->block_num = block_calc(size);
+	temp->block_num = block_calc(temp->bit_size);
 	temp->is_file = _is_file;
 	temp->name = ft_strdup(name);
 	temp->result = NULL;
