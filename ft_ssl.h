@@ -42,11 +42,11 @@ char			*md5(unsigned char *message, int tBytes);
 typedef struct			s_queue
 {
 	int					index;
-	int					byte_size;
 	int					is_file;
 	int					tBytes;
 	char				*name;
 	char				*result;
+	uint64_t			byte_size;
 	struct s_queue		*next;
 }						t_queue;
 

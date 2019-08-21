@@ -35,7 +35,7 @@ void		check_file(t_ssl *ssl, char *s1)
 
 	realpath(s1, (char*)&filename);
 	if ((stat(filename, &stats)) < 0 || (S_ISREG(stats.st_mode) != 1))
-		q_init(&ssl->begin, s1, 0, -1);
+		q_init(&ssl->begin, s1, 0, true);
 	else
 		q_init(&ssl->begin, filename, stats.st_size, true);
 	ssl->numQ++;

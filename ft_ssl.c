@@ -57,7 +57,7 @@ void			file_message(unsigned char *message, t_queue *data)
 	
 	reads = 10;
 	fd = open(data->name, O_RDONLY);
-	if ((reads = read(fd, message, data->byte_size)) == data->byte_size)
+	if ((uint64_t)(reads = read(fd, message, (size_t)data->byte_size)) == data->byte_size)
 		if (read(fd, NULL, 1) != 0)
 			err(data, "File Read Error");
 	*(message + (data->byte_size)) = 128;
@@ -66,15 +66,17 @@ void			file_message(unsigned char *message, t_queue *data)
 
 void			digest(int mode, t_queue *data, int is_file)
 {
-	unsigned char	message[data->tBytes];
-
-	ft_bzero(&message, data->tBytes);
+	unsigned char *message;
+	
+	message = (unsigned char *)malloc(sizeof(unsigned char) * data->tBytes);
+	ft_bzero(message, data->tBytes);
 	if (!is_file)
-		str_message((unsigned char*)&message, data);
+		str_message((unsigned char*)message, data);
 	else
-		file_message((unsigned char*)&message, data);
+		file_message((unsigned char*)message, data);
 	//test_message((unsigned char*)&message, data);
-	data->result = modes[mode](message, data->tBytes);	
+	data->result = modes[mode](message, data->tBytes);
+	free(message);
 }
 
 void			process_message(t_ssl *ssl)
@@ -91,7 +93,7 @@ void			process_message(t_ssl *ssl)
 	temp = ssl->begin;
 	while (temp != NULL)
 	{
-		if (temp->is_file == true)
+		if (temp->byte_size != 0 && temp->is_file == true)
 			digest(ssl->mode, temp, 1);
 		temp = temp->next;
 	}
@@ -128,7 +130,9 @@ void		print_messages(t_ssl *ssl, int _is_file)
 	{
 		if (temp->is_file == _is_file)
 		{
-			if (!((ssl->flags >> q_flag) & 1))
+			if (temp->byte_size == 0)
+				ft_printf("ft_ssl %s: %s: No such file or directory\n", test[ssl->mode], temp->name);
+			else if (!((ssl->flags >> q_flag) & 1))
 			{
 				if ((ssl->flags >> p_flag) & 1)
 				{
@@ -141,10 +145,8 @@ void		print_messages(t_ssl *ssl, int _is_file)
 					ft_printf("%s (%s) = %s\n", test[ssl->mode], nameify(temp, _is_file), temp->result);
 			}
 			else
-				ft_printf("%s", temp->result);
-		}
-		else if (temp->is_file == -1)
-			ft_printf("ft_ssl %s: %s: No such file or directory\n", test[ssl->mode], temp->name);
+				ft_printf("%s\n", temp->result);
+		}	
 		temp = temp->next;
 	}
 }
