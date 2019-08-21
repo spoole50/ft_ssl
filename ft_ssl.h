@@ -16,6 +16,7 @@
 # include "libft/libft.h"
 # include <stdint.h>
 # include <sys/stat.h>
+# include <fcntl.h>
 
 /*
 ** Algorithms
@@ -23,8 +24,9 @@
 # define MODE_NUM 2
 # define MD5 0
 # define SHA256 1
-typedef char	*algorithm(unsigned char *message, int block_num);
-char			*md5(unsigned char *message, int block_num);
+typedef char	*algorithm(unsigned char *message, int tBytes);
+static	char	*test[] = {"MD5", "SHA256"};
+char			*md5(unsigned char *message, int tBytes);
 
 # define false 0
 # define true 1
@@ -40,9 +42,9 @@ char			*md5(unsigned char *message, int block_num);
 typedef struct			s_queue
 {
 	int					index;
-	int					bit_size;
+	int					byte_size;
 	int					is_file;
-	int					block_num;
+	int					tBytes;
 	char				*name;
 	char				*result;
 	struct s_queue		*next;

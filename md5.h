@@ -56,6 +56,12 @@ static int	consts[64] = {
 # define H(x, y, z) (x ^ y ^ z)
 # define I(x, y, z) (y ^ (x | (~z)))
 
+typedef struct s_md5
+{
+    uint32_t    state[4];
+    uint32_t    T;
+    uint32_t    g;
+}               t_md5;
 
 
 #endif

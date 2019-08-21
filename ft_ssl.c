@@ -23,11 +23,18 @@ void		err(t_queue *begin, char *err)
 	exit(EXIT_FAILURE);
 }
 
+uint64_t swap_uint64( uint64_t val )
+{
+    val = ((val << 8) & 0xFF00FF00FF00FF00ULL ) | ((val >> 8) & 0x00FF00FF00FF00FFULL );
+    val = ((val << 16) & 0xFFFF0000FFFF0000ULL ) | ((val >> 16) & 0x0000FFFF0000FFFFULL );
+    return (val << 32) | (val >> 32);
+}
+
 void			str_message(unsigned char *message, t_queue *data)
 {
-	ft_memcpy(message, data->name, data->bit_size/8);
-	*(message + (data->bit_size/8)) = 128;
-	(*(uint64_t*)(message + ((data->block_num * 64) - 8))) = (uint64_t)data->bit_size;
+	ft_memcpy(message, data->name, data->byte_size);
+	*(message + (data->byte_size)) = 128;
+	(*(uint64_t*)(message + ((data->tBytes) - 8))) = (uint64_t)(data->byte_size * 8);
 }
 
 void			test_message(unsigned char *message, t_queue *data)
@@ -35,7 +42,7 @@ void			test_message(unsigned char *message, t_queue *data)
 	int i;
 
 	i = 0;
-	while (data->block_num * 64 > i)
+	while (data->tBytes > i)
 	{
 		ft_printf("%p:%d: %08s\n", message + i,i,ft_itoab_unsigned(*(message + i),2));
 		i++;
@@ -43,14 +50,31 @@ void			test_message(unsigned char *message, t_queue *data)
 	ft_printf("\n");
 }
 
-void			digest(int mode, t_queue *data)
+void			file_message(unsigned char *message, t_queue *data)
 {
-	unsigned char	message[data->block_num * 64];
+	int	fd;
+	int	reads;
+	
+	reads = 10;
+	fd = open(data->name, O_RDONLY);
+	if ((reads = read(fd, message, data->byte_size)) == data->byte_size)
+		if (read(fd, NULL, 1) != 0)
+			err(data, "File Read Error");
+	*(message + (data->byte_size)) = 128;
+	(*(uint64_t*)(message + ((data->tBytes) - 8))) = (uint64_t)(data->byte_size*8);
+}
 
-	ft_bzero(&message, data->block_num * 64);
-	str_message((unsigned char*)&message, data);
+void			digest(int mode, t_queue *data, int is_file)
+{
+	unsigned char	message[data->tBytes];
+
+	ft_bzero(&message, data->tBytes);
+	if (!is_file)
+		str_message((unsigned char*)&message, data);
+	else
+		file_message((unsigned char*)&message, data);
 	//test_message((unsigned char*)&message, data);
-	data->result = modes[mode](message, data->block_num);	
+	data->result = modes[mode](message, data->tBytes);	
 }
 
 void			process_message(t_ssl *ssl)
@@ -61,19 +85,66 @@ void			process_message(t_ssl *ssl)
 	while (temp != NULL)
 	{
 		if (temp->is_file == false)
-			digest(ssl->mode, temp);
+			digest(ssl->mode, temp, 0);
 		temp = temp->next;	
+	}
+	temp = ssl->begin;
+	while (temp != NULL)
+	{
+		if (temp->is_file == true)
+			digest(ssl->mode, temp, 1);
+		temp = temp->next;
 	}
 }
 
-void		print_messages(t_ssl *ssl)
+char		*nameify(t_queue *data, int is_file)
+{
+	int i;
+	char	*clean;
+
+	clean = NULL;
+	i = ft_strlen(data->name);
+	if (is_file == 1)
+	{
+		while (data->name[i - 1] != '/')
+			i--;
+		return (data->name + i);
+	}
+	else
+	{
+		clean = data->name;
+		ft_asprintf(&data->name, "\"%s\"", clean);
+		free(clean);
+	}
+	return (data->name);
+}
+
+void		print_messages(t_ssl *ssl, int _is_file)
 {
 	t_queue	*temp;
 
 	temp = ssl->begin;
 	while (temp != NULL)
 	{
-		ft_printf("%s", temp->result);
+		if (temp->is_file == _is_file)
+		{
+			if (!((ssl->flags >> q_flag) & 1))
+			{
+				if ((ssl->flags >> p_flag) & 1)
+				{
+					ssl->flags &= ~(1 << p_flag);
+					ft_printf("%s%s\n", temp->name, temp->result);
+				}
+				else if ((ssl->flags >> r_flag) & 1)
+					ft_printf("%s %s\n", temp->result, nameify(temp, _is_file));
+				else
+					ft_printf("%s (%s) = %s\n", test[ssl->mode], nameify(temp, _is_file), temp->result);
+			}
+			else
+				ft_printf("%s", temp->result);
+		}
+		else if (temp->is_file == -1)
+			ft_printf("ft_ssl %s: %s: No such file or directory\n", test[ssl->mode], temp->name);
 		temp = temp->next;
 	}
 }
@@ -85,13 +156,15 @@ int			main(int ac, char **av)
 	ssl.flags = 0;
 	ssl.begin = NULL;
 	ssl.numQ = 0;
-	if (ac > 1)
+	ssl.mode = get_mode(av[1]);
+	if (ac > 2)
 		check_args(&ssl, ac, av);
 	else
 		handle_stdin(&ssl);
-		printQ(ssl.begin);
+	//printQ(ssl.begin);
 	process_message(&ssl);
-	print_messages(&ssl);
+	print_messages(&ssl, 0);
+	print_messages(&ssl, 1);
 	cleanQ(ssl.begin);	
 	return (0);
 }

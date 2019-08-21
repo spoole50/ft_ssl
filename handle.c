@@ -30,6 +30,7 @@ char		*check_stdin(int *size)
 			clean = res;
 			res = ft_strjoin(res, tmp);
 			free(clean);
+			bzero(tmp, 64);
 		}
 		*size += writes;
 	}
@@ -53,6 +54,7 @@ void		handle_stdin(t_ssl *ssl)
 	char	*input;
 	int		size;
 
+	size = 0;
 	input = check_stdin(&size);
 	q_init(&ssl->begin, input, size, false);
 	free(input);

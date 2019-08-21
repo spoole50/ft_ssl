@@ -34,7 +34,6 @@ void		check_file(t_ssl *ssl, char *s1)
 	char		filename[100];
 
 	realpath(s1, (char*)&filename);
-	ft_printf("%s\n", filename);
 	if ((stat(filename, &stats)) < 0 || (S_ISREG(stats.st_mode) != 1))
 		q_init(&ssl->begin, s1, 0, -1);
 	else
@@ -44,24 +43,24 @@ void		check_file(t_ssl *ssl, char *s1)
 
 int			get_mode(char *s1)
 {
-	char	*verify;
 	int 	i;
-	char	*test[MODE_NUM] = {"md5", "sha256"};
+	
 
 	i = 0;
-	verify = ft_strdup(s1);
-	while (s1[i] != '\0')
+	if (s1 != NULL)
 	{
-		s1[i] = ft_tolower(s1[i]);
-		i++;
-	}
-	i = 0;
-	while (i < MODE_NUM)
+		while (s1[i] != '\0')
 		{
-			if (ft_strcmp(verify, test[i]) == 0)
-				return (i);
+			s1[i] = ft_toupper(s1[i]);
+			i++;
 		}
-	free(verify);
+		i = -1;
+		while (++i < MODE_NUM)
+			{
+				if (ft_strcmp(s1, test[i]) == 0)
+					return (i);
+			}
+	}
 	err(NULL, "Not a valid algorithm mode");
 	return (-1);
 }
@@ -69,15 +68,21 @@ int			get_mode(char *s1)
 void		check_args(t_ssl *ssl, int ac, char **av)
 {
 	int i;
+	int	pfl;
 
-	i = 1;
-	ssl->mode = get_mode(av[i++]);
+	i = 2;
+	pfl = 0;
 	while (i < ac)
 	{
 		if (av[i][0] == '-')
 		{
 			parse_flags(ssl, av[i]);
-			if ((ssl->flags >> s_flag) & 1)
+			if (pfl == 0 && (ssl->flags >> p_flag) & 1)
+			{
+				pfl = 1;
+				handle_stdin(ssl);
+			}
+			else if ((ssl->flags >> s_flag) & 1)
 				(++i < ac) ? handle_s(ssl, av[i], true):\
 				err(ssl->begin, "invalid string with -s flag");
 		}
@@ -85,6 +90,4 @@ void		check_args(t_ssl *ssl, int ac, char **av)
 			check_file(ssl, av[i]);
 		i++;
 	}
-	if ((ssl->flags >> p_flag) & 1)
-		handle_stdin(ssl);
 }

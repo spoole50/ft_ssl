@@ -17,15 +17,47 @@ uint32_t    left(uint32_t T, int shift)
     return ( (T << shift) | (T >> (32 - shift)) );
 }
 
-char    *md5(unsigned char *message, int block_num)
+void    make_result(unsigned char *output, uint32_t *input, int len)
+{
+    int i;
+    int j;
+
+    i = 0;
+    j = 0;
+    while (j < len)
+    {
+        output[j] = (unsigned char)(input[i] & 0xff);
+        output[j + 1] = (unsigned char)((input[i] >> 8) & 0xff);
+        output[j + 2] = (unsigned char)((input[i] >> 16) & 0xff);
+        output[j + 3] = (unsigned char)((input[i] >> 24) & 0xff);
+        j += 4;
+        i++;
+    }
+}
+
+char        *str_result(unsigned char *output)
+{
+    char    *temp;
+    char    *clean;
+    int     i = 0;
+    clean = temp = NULL;
+    while (i < 16)
+    {
+        ft_asprintf(&clean,"%02x", output[i]);
+        temp = ft_strjoin(temp, clean);
+        free(clean);
+        i++;
+    }
+    return (temp);
+}
+
+char    *md5(unsigned char *message, int tBytes)
 {
     int block;
-    int words;
     int i;
     uint32_t state[4];
     uint32_t T, g;
     uint32_t a, b, c, d;
-    char    *result;
 
     state[A] = a0;
     state[B] = b0;
@@ -33,15 +65,14 @@ char    *md5(unsigned char *message, int block_num)
     state[D] = d0;
 
     block = 0;
-    words = 0;
     i = 0;
-    while (block < block_num)
+    while (block < tBytes/64)
     {
         T = g = a = b = c = d = 0;
-        a = a0;
-        b = b0;
-        c = c0;
-        d = d0;
+        a = state[A];
+        b = state[B];
+        c = state[C];
+        d = state[D];
         while (i < 64)
         {
             if (i <= 15)
@@ -64,7 +95,7 @@ char    *md5(unsigned char *message, int block_num)
                 T = I(b,c,d);
                 g = (7 * i) % 16;
             }
-            T = T + a + consts[i] + *(uint32_t*)(message + ((block * 64) + (4 * g)));
+            T = T + a + consts[i] + (*(uint32_t*)(message + ((block * 64) + (4 * g))));
             a = d;
             d = c;
             c = b;
@@ -78,6 +109,7 @@ char    *md5(unsigned char *message, int block_num)
         i = 0;
         block++;
     }
-    ft_asprintf(&result, "md5: %x %x %x %x\n", state[A], state[B], state[C], state[D]);
-    return (result);
+    unsigned char output[16];
+    make_result((unsigned char*)&output, state, 16);
+    return (str_result((unsigned char*)&output));
 }
