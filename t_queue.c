@@ -33,6 +33,8 @@ void			cleanQ(t_queue *begin)
 	{
 		begin = clean->next;
 		free(clean->name);
+		if (clean->byte_size != 0)
+			free(clean->result);
 		free(clean);
 		clean = begin;
 	}

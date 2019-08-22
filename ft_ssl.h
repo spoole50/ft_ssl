@@ -27,6 +27,7 @@
 typedef char	*algorithm(unsigned char *message, int tBytes);
 static	char	*test[] = {"MD5", "SHA256"};
 char			*md5(unsigned char *message, int tBytes);
+char        	*sha256(unsigned char *message, int tBytes);
 
 # define false 0
 # define true 1

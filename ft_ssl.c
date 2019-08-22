@@ -12,7 +12,7 @@
 
 #include "ft_ssl.h"
 
-algorithm	*modes[MODE_NUM] = {md5};
+algorithm	*modes[MODE_NUM] = {md5, sha256};
 
 void		err(t_queue *begin, char *err)
 {
@@ -58,7 +58,7 @@ void			file_message(unsigned char *message, t_queue *data)
 	reads = 10;
 	fd = open(data->name, O_RDONLY);
 	if ((uint64_t)(reads = read(fd, message, (size_t)data->byte_size)) == data->byte_size)
-		if (read(fd, NULL, 1) != 0)
+		if (reads == 0)
 			err(data, "File Read Error");
 	*(message + (data->byte_size)) = 128;
 	(*(uint64_t*)(message + ((data->tBytes) - 8))) = (uint64_t)(data->byte_size*8);

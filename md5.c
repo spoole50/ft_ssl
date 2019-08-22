@@ -39,13 +39,17 @@ char        *str_result(unsigned char *output)
 {
     char    *temp;
     char    *clean;
+    char    *test;
     int     i = 0;
-    clean = temp = NULL;
+    clean = temp = test = NULL;
     while (i < 16)
     {
         ft_asprintf(&clean,"%02x", output[i]);
+        if (temp != NULL)
+            test = temp;
         temp = ft_strjoin(temp, clean);
         free(clean);
+        free(test);
         i++;
     }
     return (temp);
