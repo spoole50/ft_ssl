@@ -15,25 +15,22 @@
 
 # include "ft_ssl.h"
 
-# define ROTL(x,n) ((x << n) | (x >> (32 - n)))
-# define ROTR(x,n) ((x >> n) | (x << (32 - n)))
-
 # define CH(x,y,z) ((x & y) ^ (~(x) & z))
 # define MAJ(x,y,z) ((x & y) ^ (x & z) ^ (y & z))
 
-# define EP0(x) ((ROTR(x,2) ^ ROTR(x, 13) ^ ROTR(x, 22))
+# define EP0(x) (ROTR(x,2) ^ ROTR(x, 13) ^ ROTR(x, 22))
 # define EP1(x) (ROTR(x,6) ^ ROTR(x, 11) ^ ROTR(x, 22))
 # define SIG0(x) (ROTR(x,7) ^ ROTR(x,18) ^ (x >> 3))
 # define SIG1(x) (ROTR(x,17) ^ ROTR(x,19) ^ (x >> 10))
 
-# define a 0
-# define b 1
-# define c 2
-# define d 3
-# define e 4
-# define f 5
-# define g 6
-# define h 7
+# define a sha.reg[0]
+# define b sha.reg[1]
+# define c sha.reg[2]
+# define d sha.reg[3]
+# define e sha.reg[4]
+# define f sha.reg[5]
+# define g sha.reg[6]
+# define h sha.reg[7]
 
 static unsigned int	consts[64] = {	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
 									0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
@@ -46,8 +43,12 @@ static unsigned int	consts[64] = {	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba
 
 typedef struct		s_sha256
 {
-	unsigned char	data[64];
-	unsigned int	state[8];
+	uint32_t		m[64];
+	uint32_t		state[8];
+	uint32_t		reg[8];
+	uint32_t		j;
+	uint32_t		t1;
+	uint32_t		t2;
 }					t_sha256;
 
 

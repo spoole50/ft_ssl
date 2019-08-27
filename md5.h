@@ -56,11 +56,19 @@ static unsigned int	consts[64] = {
 # define H(x, y, z) (x ^ y ^ z)
 # define I(x, y, z) (y ^ (x | (~z)))
 
+
+
 typedef struct s_md5
 {
     uint32_t    state[4];
     uint32_t    T;
     uint32_t    g;
+    uint32_t    a;
+    uint32_t    b;
+    uint32_t    c;
+    uint32_t    d;
 }               t_md5;
+
+# define MD5INIT(x) t_md5 x = {.T = 0, .g = 0, .a = 0, .b = 0, .c = 0, .d = 0}
 
 #endif

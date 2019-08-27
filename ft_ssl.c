@@ -23,20 +23,6 @@ void		err(t_queue *begin, char *err)
 	exit(EXIT_FAILURE);
 }
 
-uint64_t swap_uint64( uint64_t val )
-{
-    val = ((val << 8) & 0xFF00FF00FF00FF00ULL ) | ((val >> 8) & 0x00FF00FF00FF00FFULL );
-    val = ((val << 16) & 0xFFFF0000FFFF0000ULL ) | ((val >> 16) & 0x0000FFFF0000FFFFULL );
-    return (val << 32) | (val >> 32);
-}
-
-void			str_message(unsigned char *message, t_queue *data)
-{
-	ft_memcpy(message, data->name, data->byte_size);
-	*(message + (data->byte_size)) = 128;
-	(*(uint64_t*)(message + ((data->tBytes) - 8))) = (uint64_t)(data->byte_size * 8);
-}
-
 void			test_message(unsigned char *message, t_queue *data)
 {
 	int i;
@@ -60,8 +46,6 @@ void			file_message(unsigned char *message, t_queue *data)
 	if ((uint64_t)(reads = read(fd, message, (size_t)data->byte_size)) == data->byte_size)
 		if (reads == 0)
 			err(data, "File Read Error");
-	*(message + (data->byte_size)) = 128;
-	(*(uint64_t*)(message + ((data->tBytes) - 8))) = (uint64_t)(data->byte_size*8);
 }
 
 void			digest(int mode, t_queue *data, int is_file)
@@ -71,11 +55,11 @@ void			digest(int mode, t_queue *data, int is_file)
 	message = (unsigned char *)malloc(sizeof(unsigned char) * data->tBytes);
 	ft_bzero(message, data->tBytes);
 	if (!is_file)
-		str_message((unsigned char*)message, data);
+		ft_memcpy(message, data->name, data->byte_size);
 	else
 		file_message((unsigned char*)message, data);
 	//test_message((unsigned char*)&message, data);
-	data->result = modes[mode](message, data->tBytes);
+	data->result = modes[mode](message, data);
 	free(message);
 }
 

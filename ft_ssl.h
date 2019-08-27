@@ -18,19 +18,25 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 
-/*
-** Algorithms
-*/
-# define MODE_NUM 2
-# define MD5 0
-# define SHA256 1
-typedef char	*algorithm(unsigned char *message, int tBytes);
-static	char	*test[] = {"MD5", "SHA256"};
-char			*md5(unsigned char *message, int tBytes);
-char        	*sha256(unsigned char *message, int tBytes);
-
 # define false 0
 # define true 1
+
+# define SWAP_BITS32(x) ((((x) & 0xff000000) >> 24)\
+						| (((x) & 0x00ff0000) >>  8)\
+      					| (((x) & 0x0000ff00) <<  8)\
+						| (((x) & 0x000000ff) << 24))
+
+# define SWAP_BITS64(x) (((((x) & 0xff00000000000000ull) >> 56)\
+                     | (((x) & 0x00ff000000000000ull) >> 40)\
+                     | (((x) & 0x0000ff0000000000ull) >> 24)\
+                     | (((x) & 0x000000ff00000000ull) >> 8)\
+                     | (((x) & 0x00000000ff000000ull) << 8)\
+                     | (((x) & 0x0000000000ff0000ull) << 24)\
+                     | (((x) & 0x000000000000ff00ull) << 40)\
+                     | (((x) & 0x00000000000000ffull) << 56)))
+
+# define ROTL(x,n) ((x << n) | (x >> (32 - n)))
+# define ROTR(x,n) ((x >> n) | (x << (32 - n))) 
 
 /*
 ** Flags
@@ -40,6 +46,9 @@ char        	*sha256(unsigned char *message, int tBytes);
 # define r_flag 2
 # define s_flag 3
 
+/*
+**	SSL Structs
+*/
 typedef struct			s_queue
 {
 	int					index;
@@ -58,6 +67,17 @@ typedef struct 			s_ssl
 	int					numQ;
 	t_queue				*begin;
 }						t_ssl;
+
+/*
+** Algorithms
+*/
+# define MODE_NUM 2
+# define MD5 0
+# define SHA256 1
+typedef char	*algorithm(unsigned char *message, t_queue *data);
+static	char	*test[] = {"MD5", "SHA256"};
+char			*md5(unsigned char *message, t_queue *data);
+char        	*sha256(unsigned char *message, t_queue *data);
 
 /*
 **	ft_ssl.h
