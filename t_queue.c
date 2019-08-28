@@ -12,17 +12,19 @@
 
 #include "ft_ssl.h"
 
-void			printQ(t_queue *begin)
+void			q_print(t_queue *begin)
 {
 	while (begin != NULL)
 	{
-		ft_printf("Node# %-2d File?:%-2c String/fileame:%-65s Size(Bits/Bytes/Blocks):%d/%d/%d\n",\
-		begin->index, (begin->is_file == true) ? 'Y' : 'N', begin->name, begin->byte_size*8, begin->byte_size, begin->tBytes);
+		ft_printf("Node# %-2d File?:%-2c String/fileame:%-65s\
+		Size(Bits/Bytes/Blocks):%d/%d/%d\n",\
+		begin->index, (begin->is_file == TRUE) ? 'Y' : 'N', begin->name,\
+		begin->byte_size * 8, begin->byte_size, begin->t_bytes);
 		begin = begin->next;
 	}
 }
 
-void			cleanQ(t_queue *begin)
+void			q_clean(t_queue *begin)
 {
 	t_queue		*clean;
 
@@ -43,7 +45,7 @@ void			cleanQ(t_queue *begin)
 void			queue_add(t_queue **begin, t_queue *temp)
 {
 	t_queue		*iter;
-	
+
 	iter = *begin;
 	if (iter == NULL)
 		*begin = temp;
@@ -61,12 +63,12 @@ int				calc_block(int size)
 	size += 9;
 	while (size % 64 != 0)
 		size++;
-	return size;
+	return (size);
 }
 
-void			q_init(t_queue **begin, char *name, int size, int _is_file)
+void			q_init(t_queue **begin, char *name, int size, int isfile)
 {
-	t_queue 	*temp;
+	t_queue		*temp;
 	int			i;
 	int			x;
 
@@ -76,8 +78,8 @@ void			q_init(t_queue **begin, char *name, int size, int _is_file)
 		err(*begin, "t_queue initialization error");
 	temp->index = 1;
 	temp->byte_size = size;
-	temp->is_file = _is_file;
-	temp->tBytes= calc_block(size);
+	temp->is_file = isfile;
+	temp->t_bytes = calc_block(size);
 	temp->name = ft_strdup(name);
 	temp->result = NULL;
 	temp->next = NULL;

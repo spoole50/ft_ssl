@@ -43,10 +43,10 @@ char		*check_stdin(int *size)
 
 void		handle_s(t_ssl *ssl, char *s1, int is_arg)
 {
-	if (is_arg == true)
-		ssl->flags &= ~(1 << s_flag);
-	q_init(&ssl->begin, s1, ft_strlen(s1), false);
-	ssl->numQ++;
+	if (is_arg == TRUE)
+		ssl->flags &= ~(1 << S_FLAG);
+	q_init(&ssl->begin, s1, ft_strlen(s1), FALSE);
+	ssl->num_q++;
 }
 
 void		handle_stdin(t_ssl *ssl)
@@ -56,6 +56,28 @@ void		handle_stdin(t_ssl *ssl)
 
 	size = 0;
 	input = check_stdin(&size);
-	q_init(&ssl->begin, input, size, false);
+	q_init(&ssl->begin, input, size, FALSE);
 	free(input);
+}
+
+char		*nameify(t_queue *data, int is_file)
+{
+	int		i;
+	char	*clean;
+
+	clean = NULL;
+	i = ft_strlen(data->name);
+	if (is_file == TRUE)
+	{
+		while (data->name[i - 1] != '/')
+			i--;
+		return (data->name + i);
+	}
+	else
+	{
+		clean = data->name;
+		ft_asprintf(&data->name, "\"%s\"", clean);
+		free(clean);
+	}
+	return (data->name);
 }

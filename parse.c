@@ -12,10 +12,10 @@
 
 #include "ft_ssl.h"
 
-void		parse_flags(t_ssl *ssl, char *s1)
+void			parse_flags(t_ssl *ssl, char *s1)
 {
-	int i;
-	int	flag;
+	int			i;
+	int			flag;
 
 	i = 1;
 	flag = 0;
@@ -28,23 +28,27 @@ void		parse_flags(t_ssl *ssl, char *s1)
 	}
 }
 
-void		check_file(t_ssl *ssl, char *s1)
+void			check_file(t_ssl *ssl, char *s1)
 {
-	struct stat stats;
+	struct stat	stats;
 	char		filename[100];
 
 	realpath(s1, (char*)&filename);
-	if ((stat(filename, &stats)) < 0 || (S_ISREG(stats.st_mode) != 1))
-		q_init(&ssl->begin, s1, 0, true);
+	if ((stat(filename, &stats)) < 0 || !(stats.st_mode & S_IFREG))
+	{
+		if (stats.st_mode & S_IFDIR)
+			q_init(&ssl->begin, s1, 0, 2);
+		else
+			q_init(&ssl->begin, s1, 0, 3);
+	}
 	else
-		q_init(&ssl->begin, filename, stats.st_size, true);
-	ssl->numQ++;
+		q_init(&ssl->begin, filename, stats.st_size, TRUE);
+	ssl->num_q++;
 }
 
-int			get_mode(char *s1)
+int				get_mode(char *s1)
 {
-	int 	i;
-	
+	int			i;
 
 	i = 0;
 	if (s1 != NULL)
@@ -56,19 +60,19 @@ int			get_mode(char *s1)
 		}
 		i = -1;
 		while (++i < MODE_NUM)
-			{
-				if (ft_strcmp(s1, test[i]) == 0)
-					return (i);
-			}
+		{
+			if (ft_strcmp(s1, g_algos[i]) == 0)
+				return (i);
+		}
 	}
 	err(NULL, "Not a valid algorithm mode");
 	return (-1);
 }
 
-void		check_args(t_ssl *ssl, int ac, char **av)
+void			check_args(t_ssl *ssl, int ac, char **av)
 {
-	int i;
-	int	pfl;
+	int			i;
+	int			pfl;
 
 	i = 2;
 	pfl = 0;
@@ -77,13 +81,13 @@ void		check_args(t_ssl *ssl, int ac, char **av)
 		if (av[i][0] == '-')
 		{
 			parse_flags(ssl, av[i]);
-			if (pfl == 0 && (ssl->flags >> p_flag) & 1)
+			if (pfl == 0 && (ssl->flags >> P_FLAG) & 1)
 			{
 				pfl = 1;
 				handle_stdin(ssl);
 			}
-			else if ((ssl->flags >> s_flag) & 1)
-				(++i < ac) ? handle_s(ssl, av[i], true):\
+			else if ((ssl->flags >> S_FLAG) & 1)
+				(++i < ac) ? handle_s(ssl, av[i], TRUE) :\
 				err(ssl->begin, "invalid string with -s flag");
 		}
 		else

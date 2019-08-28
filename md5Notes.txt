@@ -6,7 +6,7 @@
 #    By: spoole <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/06 16:48:01 by spoole            #+#    #+#              #
-#    Updated: 2019/08/06 17:15:53 by spoole           ###   ########.fr        #
+#    Updated: 2019/08/27 15:07:54 by spoole           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,3 +55,4 @@
 
 https://security.stackexchange.com/questions/11717/why-are-hash-functions-one-way-if-i-know-the-algorithm-why-cant-i-calculate-t/19658#19658
 https://fthb321.github.io/MD5-Hash/MD5OurVersion2.html
+https://medium.com/a-42-journey/implementing-the-sha256-and-md5-hash-functions-in-c-78c17e657794

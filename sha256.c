@@ -13,9 +13,6 @@
 
 #include "sha256.h"
 
-void    make_result(unsigned char *output, uint32_t *input, int len);
-char        *str_result(unsigned char *output, int len);
-
 void        init_sha256(uint32_t *state)
 {
     state[0] = 0x6a09e667;
@@ -28,70 +25,63 @@ void        init_sha256(uint32_t *state)
 	state[7] = 0x5be0cd19;
 }
 
-void		prep_message(unsigned char *message, t_queue *data)
+void		sha256algo(unsigned char *message, t_queue *data, t_sha256 *sha)
 {
-	uint64_t i;
+	int block;
+	int i;
 
+	block = 0;
 	i = 0;
-	while (i < data->byte_size/4)
+	build_msg(message, data, 0);
+	init_sha256((uint32_t*)&sha->state);
+	while (block < data->t_bytes/64)
 	{
-		*((uint32_t*)(message + i)) = SWAP_BITS32(*((uint32_t*)(message + i)));
-		i += 4;
+		while (i < 16)
+		{
+			sha->m[i] = swap_bits32(*((uint32_t*)(message + (block * 64) + (i * 4))));
+			i++;
+		}
+		while (i < 64)
+		{
+			sha->m[i] = SIG1(sha->m[i - 2]) + sha->m[i - 7] + SIG0(sha->m[i - 15]) + sha->m[i - 16];
+			i++;
+		}
+		i = -1;
+		while (++i < 8)
+			sha->reg[i] = sha->state[i];
+		i = 0;
+		while (i < 64)
+		{
+			sha->t1 = (H + EP1(E) + CH(E,F,G) + g_consts[i] + sha->m[i]);
+			sha->t2 = EP0(A) + MAJ(A,B,C);
+			H = G;
+			G = F;
+			F = E;
+			E = D + sha->t1;
+			D = C;
+			C = B;
+			B = A;
+			A = sha->t1 + sha->t2;
+			i++;
+		}
+		i = -1;
+		while (++i < 8)
+			sha->state[i] += sha->reg[i];
+		i = 0;
+		block++;
 	}
-	*(message + (data->byte_size)) = 128;
-	(*(uint64_t*)(message + ((data->tBytes) - 8))) = SWAP_BITS64((uint64_t)(data->byte_size * 8));
 }
 
 char        *sha256(unsigned char *message, t_queue *data)
 {
     t_sha256	sha;
-	int block;
-	int	i;
+	int 		i;
 	unsigned char output[32];
-	
-	block = 0;
-	i = 0;
-	prep_message(message, data);
-	init_sha256((uint32_t*)&sha.state);
-	while (block < data->tBytes/64)
-	{
-		while (i < 16)
-		{
-			sha.m[i] = *((uint32_t*)(message + (block * 64) + i));
-			i++;
-		}
-		while (i < 64)
-		{
-			sha.m[i] = SIG1(sha.m[i - 2]) + sha.m[i - 7] + SIG0(sha.m[i - 15]) + sha.m[i - 16];
-			i++;
-		}
-		i = -1;
-		while (++i < 8)
-			sha.reg[i] = sha.state[i];
-		i = 0;
-		while (i < 64)
-		{
-			sha.t1 = (h + EP1(e) + CH(e,f,g) + consts[i] + sha.m[i]);
-			sha.t2 = EP0(a) + MAJ(a,b,c);
-			h = g;
-			g = f;
-			f = e;
-			e = d + sha.t1;
-			d = c;
-			c = b;
-			b = a;
-			a = sha.t1 + sha.t2;
-			i++;
-		}
-		i = -1;
-		while (++i < 8)
-			sha.state[i] += sha.reg[i];
-		i = 0;
-		block++;
-	}
+
 	i = -1;
+	sha256algo(message, data, &sha);
 	while (++i < 8)
-		sha.state[i] = SWAP_BITS32(sha.state[i]);
+		sha.state[i] = swap_bits32(sha.state[i]);
 	make_result((unsigned char*)&output, sha.state, 32);
     return (str_result((unsigned char*)&output, 32));
 }
