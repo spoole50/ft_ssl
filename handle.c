@@ -60,6 +60,19 @@ void		handle_stdin(t_ssl *ssl)
 	free(input);
 }
 
+void		clean_newline(char *s1)
+{
+	int		i;
+
+	i = 0;
+	while (s1[i] != '\0')
+	{
+		if (s1[i] == '\n')
+			s1[i] = (s1[i + 1] == '\0') ? '\0' : ' ';
+		i++;
+	}
+}
+
 char		*nameify(t_queue *data, int is_file)
 {
 	int		i;
@@ -75,6 +88,7 @@ char		*nameify(t_queue *data, int is_file)
 	}
 	else
 	{
+		clean_newline(data->name);
 		clean = data->name;
 		ft_asprintf(&data->name, "\"%s\"", clean);
 		free(clean);
