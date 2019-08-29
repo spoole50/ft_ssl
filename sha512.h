@@ -74,4 +74,7 @@ typedef struct	s_sha512
 	uint64_t	t2;
 }				t_sha512;
 
+void			sha512algo(unsigned char *message,\
+				t_sha512 *sha, t_queue *data);
+
 #endif

@@ -12,7 +12,7 @@
 
 #include "ft_ssl.h"
 
-t_algorithm			*g_modes[MODE_NUM] = {md5, sha256, sha512};
+t_algorithm			*g_modes[MODE_NUM] = {md5, sha256, sha384, sha512};
 
 void				make_result(unsigned char *output, uint32_t *input, int len)
 {
@@ -65,7 +65,7 @@ void				calc_tsize(int mode, t_queue *data)
 		while (size % 64 != 0)
 			size++;
 	}
-	else if (mode == 2)
+	else if (mode >= 2)
 	{
 		size += 17;
 		while (size % 128 != 0)
