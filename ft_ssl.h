@@ -61,6 +61,7 @@ typedef struct			s_ssl
 # define MD5 0
 # define SHA256 1
 # define SHA512 2
+
 typedef char			*t_algorithm(unsigned char *message, t_queue *data);
 static	char			*g_algos[] = {"MD5", "SHA256", "SHA512"};
 char					*md5(unsigned char *message, t_queue *data);
@@ -77,8 +78,8 @@ void					err(t_queue *begin, char *err);
 **	bit_ops.c
 **	Endian conversion swap functions
 */
-uint32_t    			swap_bits32(uint32_t x);
-uint64_t    			swap_bits64(uint64_t x);
+uint32_t				swap_bits32(uint32_t x);
+uint64_t				swap_bits64(uint64_t x);
 
 /*
 **	digest.c

@@ -71,7 +71,10 @@ void		print_messages(t_ssl *ssl, int isfile)
 		if (temp->is_file >= isfile)
 		{
 			if (temp->is_file >= 2)
-				ft_printf("ft_ssl %s: %s: %s\n", g_algos[ssl->mode], temp->name, (temp->is_file == 2) ? "Is a directory" : "No such file or directory");
+				ft_printf("ft_ssl %s: %s: %s\n",\
+				g_algos[ssl->mode], temp->name,\
+				(temp->is_file == 2) ? "Is a directory"\
+				: "No such file or directory");
 			else if (!((ssl->flags >> Q_FLAG) & 1))
 				flag_help(ssl, temp);
 			else

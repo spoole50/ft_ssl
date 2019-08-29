@@ -58,14 +58,6 @@ void			queue_add(t_queue **begin, t_queue *temp)
 	}
 }
 
-int				calc_block(int size)
-{
-	size += 9;
-	while (size % 64 != 0)
-		size++;
-	return (size);
-}
-
 void			q_init(t_queue **begin, char *name, int size, int isfile)
 {
 	t_queue		*temp;
@@ -79,7 +71,6 @@ void			q_init(t_queue **begin, char *name, int size, int isfile)
 	temp->index = 1;
 	temp->byte_size = size;
 	temp->is_file = isfile;
-	//temp->t_bytes = calc_block(size);
 	temp->t_bytes = 0;
 	temp->name = ft_strdup(name);
 	temp->result = NULL;
