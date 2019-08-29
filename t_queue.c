@@ -79,7 +79,8 @@ void			q_init(t_queue **begin, char *name, int size, int isfile)
 	temp->index = 1;
 	temp->byte_size = size;
 	temp->is_file = isfile;
-	temp->t_bytes = calc_block(size);
+	//temp->t_bytes = calc_block(size);
+	temp->t_bytes = 0;
 	temp->name = ft_strdup(name);
 	temp->result = NULL;
 	temp->next = NULL;

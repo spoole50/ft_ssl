@@ -15,13 +15,13 @@
 
 # include "ft_ssl.h"
 
-# define CH(x,y,z) ((x & y) ^ ((~x) & z))
-# define MAJ(x,y,z) ((x & y) ^ (x & z) ^ (y & z))
+# define CH(x,y,z) (((x) & ((y) ^ (z))) ^ (z))
+# define MAJ(x,y,z) (((x) & ((y) | (z))) | ((y) & (z)))
 
-# define EP0(x) (ROTR(x,2) ^ ROTR(x, 13) ^ ROTR(x, 22))
-# define EP1(x) (ROTR(x,6) ^ ROTR(x, 11) ^ ROTR(x, 25))
-# define SIG0(x) (ROTR(x,7) ^ ROTR(x,18) ^ (x >> 3))
-# define SIG1(x) (ROTR(x,17) ^ ROTR(x,19) ^ (x >> 10))
+# define EP0(x) (ROTR(x, 2) ^ ROTR(x, 13) ^ ROTR(x, 22))
+# define EP1(x) (ROTR(x, 6) ^ ROTR(x, 11) ^ ROTR(x, 25))
+# define SIG0(x) (ROTR(x, 7) ^ ROTR(x, 18) ^ (x >> 3))
+# define SIG1(x) (ROTR(x, 17) ^ ROTR(x, 19) ^ (x >> 10))
 
 # define A sha->reg[0]
 # define B sha->reg[1]
@@ -32,7 +32,7 @@
 # define G sha->reg[6]
 # define H sha->reg[7]
 
-static unsigned int	g_consts[64] = {
+static unsigned int	g_consts256[64] = {
 	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
 	0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
 	0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,

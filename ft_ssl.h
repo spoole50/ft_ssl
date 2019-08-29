@@ -57,13 +57,15 @@ typedef struct			s_ssl
 /*
 ** Algorithms
 */
-# define MODE_NUM 2
+# define MODE_NUM 3
 # define MD5 0
 # define SHA256 1
+# define SHA512 2
 typedef char			*t_algorithm(unsigned char *message, t_queue *data);
-static	char			*g_algos[] = {"MD5", "SHA256"};
+static	char			*g_algos[] = {"MD5", "SHA256", "SHA512"};
 char					*md5(unsigned char *message, t_queue *data);
 char					*sha256(unsigned char *message, t_queue *data);
+char					*sha512(unsigned char *message, t_queue *data);
 
 /*
 **	ft_ssl.h

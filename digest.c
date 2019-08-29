@@ -12,7 +12,7 @@
 
 #include "ft_ssl.h"
 
-t_algorithm			*g_modes[MODE_NUM] = {md5, sha256};
+t_algorithm			*g_modes[MODE_NUM] = {md5, sha256, sha512};
 
 void				make_result(unsigned char *output, uint32_t *input, int len)
 {
@@ -36,30 +36,50 @@ char				*str_result(unsigned char *output, int len)
 {
 	char			*temp;
 	char			*clean;
-	char			*test;
 	int				i;
 
 	clean = NULL;
 	temp = NULL;
-	test = NULL;
 	i = 0;
 	while (i < len)
 	{
-		ft_asprintf(&clean, "%02x", output[i]);
-		if (temp != NULL)
-			test = temp;
-		temp = ft_strjoin(temp, clean);
+		clean = temp;
+		if (i == 0)
+			ft_asprintf(&temp, "%02x", output[i]);
+		else
+			ft_asprintf(&temp, "%s%02x", temp, output[i]);
 		free(clean);
-		free(test);
 		i++;
 	}
 	return (temp);
+}
+
+void				calc_tsize(int mode, t_queue *data)
+{
+	uint64_t size;
+
+	size = data->byte_size;
+	if (mode <= 1)
+	{
+		size += 9;
+		while (size % 64 != 0)
+			size++;
+	}
+	else if (mode == 2)
+	{
+		size += 17;
+		while (size % 128 != 0)
+			size++;
+	}
+	if (size != data->byte_size)
+		data->t_bytes = size;
 }
 
 void				digest(int mode, t_queue *data, int is_file)
 {
 	unsigned char	*message;
 
+	calc_tsize(mode, data);
 	message = (unsigned char *)malloc(sizeof(unsigned char) * data->t_bytes);
 	ft_bzero(message, data->t_bytes);
 	if (!is_file)
