@@ -45,7 +45,7 @@ void				sha265_compress(t_sha256 *sha)
 	}
 }
 
-void				sha256_process(uint32_t **message,\
+void				sha256_process(unsigned char *message,\
 					t_sha256 *sha, int block)
 {
 	int				i;
@@ -73,11 +73,9 @@ void				sha256algo(unsigned char *message,\
 
 	block = 0;
 	i = 0;
-	build_msg(message, data, 0);
-	init_sha256((uint32_t*)&sha->state);
 	while (block < data->t_bytes / 64)
 	{
-		sha256_process((uint32_t**)message, sha, block);
+		sha256_process(message, sha, block);
 		i = -1;
 		while (++i < 8)
 			sha->reg[i] = sha->state[i];
@@ -97,6 +95,8 @@ char				*sha256(unsigned char *message, t_queue *data)
 	unsigned char	output[32];
 
 	i = -1;
+	build_msg(message, data, 0);
+	init_sha256((uint32_t*)&sha.state);
 	sha256algo(message, data, &sha);
 	while (++i < 8)
 		sha.state[i] = swap_bits32(sha.state[i]);

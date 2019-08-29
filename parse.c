@@ -86,7 +86,7 @@ void			check_args(t_ssl *ssl, int ac, char **av)
 				pfl = 1;
 				handle_stdin(ssl);
 			}
-			else if ((ssl->flags >> S_FLAG) & 1)
+			if ((ssl->flags >> S_FLAG) & 1)
 				(++i < ac) ? handle_s(ssl, av[i], TRUE) :\
 				err(ssl->begin, "invalid string with -s flag");
 		}

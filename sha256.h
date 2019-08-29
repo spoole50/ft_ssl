@@ -60,4 +60,7 @@ typedef struct		s_sha256
 	uint32_t		t2;
 }					t_sha256;
 
+void				sha256algo(unsigned char *message,\
+					t_queue *data, t_sha256 *sha);
+
 #endif
