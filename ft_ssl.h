@@ -31,6 +31,7 @@
 # define Q_FLAG 1
 # define R_FLAG 2
 # define S_FLAG 3
+# define H_FLAG 4
 
 /*
 **	SSL Structs
@@ -57,17 +58,19 @@ typedef struct			s_ssl
 /*
 ** Algorithms
 */
-# define MODE_NUM 7
+# define MODE_NUM 8
 # define MD5 0
-# define SHA224 1
-# define SHA256 2
-# define SHA384 3
-# define SHA512 4
-# define SHA512_224 5
-# define SHA512_256 6
+# define SHA1 1
+# define SHA224 2
+# define SHA256 3
+# define SHA384 4
+# define SHA512 5
+# define SHA512_224 6
+# define SHA512_256 7
 
 static	char			*g_algos[] = {\
 	"MD5",\
+	"SHA1",\
 	"SHA224",\
 	"SHA256",\
 	"SHA384",\
@@ -83,12 +86,14 @@ char					*sha384(unsigned char *message, t_queue *data);
 char					*sha512(unsigned char *message, t_queue *data);
 char					*sha512_224(unsigned char *message, t_queue *data);
 char					*sha512_256(unsigned char *message, t_queue *data);
+char					*sha1(unsigned char *message, t_queue *data);
 
 /*
 **	ft_ssl.h
 **	Program Entry Point/Main Driver Functions
 */
 void					err(t_queue *begin, char *err);
+void					print_help(t_queue *begin);
 
 /*
 **	bit_ops.c

@@ -12,11 +12,29 @@
 
 #include "ft_ssl.h"
 
+void		print_help(t_queue *begin)
+{
+	if (begin != NULL)
+		q_clean(begin);
+	ft_printf("\n%s\n\n%s%s\n\n%s\n%s\n\n%s\n%s\n%s\n%s\n%s%s\n\n",\
+		"ft_ssl - spoole - 2019",\
+		"usage: ./ft_ssl [Algorithm] ",\
+		"[Flags] [Files or string(with s flag)...]",\
+		"Hashing Algorithms:",\
+		"md5, sha1, shaXXX: 224 256 384 512 512/224 512/256",\
+		"Flags:", "-p, echo STDIN to STDOUT and append checksum",\
+		"-q, quiet mode", "-r, reverse format of the output",\
+		"-s, print the sum of the following string ",\
+		"[\"String argument should follow\"]");
+	exit(EXIT_SUCCESS);
+}
+
 void		err(t_queue *begin, char *err)
 {
 	if (begin != NULL)
 		q_clean(begin);
-	ft_printf("%s\n%s\n", err, "Usage: ./ft_ssl [md5,sha25] -[pqrs] [file...]");
+	ft_printf("%s\n%s\n", err,\
+	"Usage: ./ft_ssl [Algorithm] -[flags] [file...]");
 	exit(EXIT_FAILURE);
 }
 

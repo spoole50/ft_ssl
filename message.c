@@ -43,7 +43,7 @@ void		build_msg(unsigned char *formatted_msg,\
 t_queue *data, int is_lil_end)
 {
 	formatted_msg[data->byte_size] = 128;
-	*(uint64_t *)(formatted_msg + data->t_bytes - 8) =
+	*(uint64_t *)(formatted_msg + data->t_bytes - 8) =\
 		is_lil_end ? 8 * data->byte_size : swap_bits64(8 * data->byte_size);
 }
 

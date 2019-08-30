@@ -21,7 +21,7 @@ void			parse_flags(t_ssl *ssl, char *s1)
 	flag = 0;
 	while (s1[i] != '\0')
 	{
-		if ((flag = ft_charspn("pqrs", s1[i])) == -1)
+		if ((flag = ft_charspn("pqrsh", s1[i])) == -1)
 			err(ssl->begin, "Invalid Flag");
 		ssl->flags |= (1 << flag);
 		i++;
@@ -49,12 +49,18 @@ void			check_file(t_ssl *ssl, char *s1)
 int				get_mode(char *s1)
 {
 	int			i;
+	int			flag;
 
 	i = 0;
+	flag = 0;
 	if (s1 != NULL)
 	{
+		if (s1[i] == '-')
+			flag = 1;
 		while (s1[i] != '\0')
 		{
+			if (flag == 1 && s1[i] == 'h')
+				print_help(NULL);
 			s1[i] = ft_toupper(s1[i]);
 			i++;
 		}
@@ -81,6 +87,8 @@ void			check_args(t_ssl *ssl, int ac, char **av)
 		if (av[i][0] == '-')
 		{
 			parse_flags(ssl, av[i]);
+			if ((ssl->flags >> H_FLAG) & 1)
+				print_help(ssl->begin);
 			if (pfl == 0 && (ssl->flags >> P_FLAG) & 1)
 			{
 				pfl = 1;
