@@ -31,3 +31,9 @@ Hashing Algorithms:
 	- State updated (+=) with register values and process continues for each block of message.
 3. Calcualate Output Hash
 	- Final state constitutes hash value, print in hexadecimal
+
+#### Resources:
+- https://fthb321.github.io/MD5-Hash/MD5OurVersion2.html
+- https://medium.com/a-42-journey/implementing-the-sha256-and-md5-hash-functions-in-c-78c17e657794
+- https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
+- https://security.stackexchange.com/questions/11717/why-are-hash-functions-one-way-if-i-know-the-algorithm-why-cant-i-calculate-t/19658#19658
