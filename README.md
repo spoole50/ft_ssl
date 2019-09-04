@@ -7,7 +7,10 @@
   3. Endianness Concepts
   
 ### Objective:
-  - Recode functionality of openssl, specifically MD5 and sha256 hashing algorithms.
+	- Recode functionality of openssl, specifically MD5 and sha256 hashing algorithms.
+  
+#### Bonus:
+	- SHA1, SHA224, SHA384, SHA512, SHA512/224, SHA512/256 Hashing Algorithms
   
 #### Functional Overview:
 Hashing Algorithms:
@@ -16,4 +19,8 @@ Hashing Algorithms:
 	- 0 bits appended until message is of proper length (algorithm dependant)
 	- Message size (in bits) value is appended to the end of the padded message (64 or 128 bit depending on algorithm)
 2. Apply Hashing algorithm to each block (512 or 1024 bit) of the padded message
-	- Algorithm specific compression functions applied to data 
+	- Initialize state variables, intialize register variables with current state.
+	- Algorithm specific compression functions applied to message block and stored in registers.
+	- State updated (+=) with register values and process continues for each block of message.
+3. Calcualate Output Hash
+	- Final state constitutes hash value, print in hexadecimal
