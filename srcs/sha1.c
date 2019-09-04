@@ -107,7 +107,7 @@ char			*sha1(unsigned char *message, t_queue *data)
 	res = NULL;
 	build_msg(message, data, 0);
 	sha1algo(message, data, &sha);
-	ft_asprintf(&res, "%x%x%x%x%x",\
+	ft_asprintf(&res, "%08x%08x%08x%08x%08x",\
 	sha.state[0], sha.state[1],\
 	sha.state[2], sha.state[3], sha.state[4]);
 	return (res);

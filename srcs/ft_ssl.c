@@ -48,7 +48,7 @@ int			main(int ac, char **av)
 	ssl.mode = get_mode(av[1]);
 	if (ac > 2)
 		check_args(&ssl, ac, av);
-	else
+	if (ssl.begin == NULL)
 		handle_stdin(&ssl);
 	process_message(&ssl);
 	print_messages(&ssl, 0);

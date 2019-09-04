@@ -17,18 +17,21 @@ CC = gcc
 CFLAGS = -Wall -Werror -Wextra -g
 
 FILES = ft_ssl.c t_queue.c handle.c parse.c digest.c md5.c sha256.c message.c bit_ops.c sha512.c sha384.c sha224.c sha512_224.c sha512_256.c sha1.c
-LIBFT = libft/
+LIBFT = libft
+LIBFTA = libft.a
+
+INCL = includes
+SRCS = srcs/*.c
 
 all : $(NAME)
 
 libft:
-	@make -C $(LIBFT) 
+	@make -C $(LIBFT)
 
-$(NAME): libft
-	@$(CC) $(CFLAGS) $(FILES) -o $(NAME) $(LIBFT)/libft.a
+$(NAME): libft $(OBJS)
+	@$(CC) $(CFLAGS) -I$(INCL) -I$(LIBFT) $(SRCS) $(LIBFT)/$(LIBFTA) -o $(NAME)
 
 clean:
-	@rm -f *.o
 	@make -C $(LIBFT) clean
 
 fclean: clean
@@ -37,4 +40,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all libft $(NAME) clean fclean re
+.PHONY: all libft $(NAME) clean fclean re $(OBJS)
