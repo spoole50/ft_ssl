@@ -7,7 +7,14 @@
   3. Endianness Concepts
   
 ### Objective:
-	- Recode functionality of openssl, specifically MD5 and sha256 hashing algorithms.
+- Recode functionality of openssl, specifically MD5 and sha256 hashing algorithms.
+	
+#### Flags:
+	-h => Usage and Help with flag explanation
+	-p => Echo STDIN to STDOUT and append checksum
+	-q => Quiet mode, only prints checksum
+	-r => Reverse format of output
+	-s => Print the checksum of following argument treated as string
   
 #### Bonus:
 	- SHA1, SHA224, SHA384, SHA512, SHA512/224, SHA512/256 Hashing Algorithms
