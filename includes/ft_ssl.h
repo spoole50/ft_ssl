@@ -14,7 +14,6 @@
 # define FT_SSL_H
 
 # include <libft.h>
-# include <stdint.h>
 # include <sys/stat.h>
 # include <fcntl.h>
 
@@ -68,15 +67,7 @@ typedef struct			s_ssl
 # define SHA512_224 6
 # define SHA512_256 7
 
-static	char			*g_algos[] = {\
-	"MD5",\
-	"SHA1",\
-	"SHA224",\
-	"SHA256",\
-	"SHA384",\
-	"SHA512",\
-	"SHA512/224",\
-	"SHA512/256"};
+extern const char		*g_algos[MODE_NUM];
 
 typedef char			*t_algorithm(unsigned char *message, t_queue *data);
 char					*md5(unsigned char *message, t_queue *data);

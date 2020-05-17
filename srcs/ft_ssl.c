@@ -12,6 +12,16 @@
 
 #include "ft_ssl.h"
 
+const char *g_algos[MODE_NUM] = {\
+	"MD5",\
+	"SHA1",\
+	"SHA224",\
+	"SHA256",\
+	"SHA384",\
+	"SHA512",\
+	"SHA512/224",\
+	"SHA512/256"};
+
 void		print_help(t_queue *begin)
 {
 	if (begin != NULL)

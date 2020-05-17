@@ -100,10 +100,8 @@ void			sha1algo(unsigned char *message, t_queue *data, t_sha1 *sha)
 char			*sha1(unsigned char *message, t_queue *data)
 {
 	t_sha1		sha;
-	int			i;
 	char		*res;
 
-	i = 0;
 	res = NULL;
 	build_msg(message, data, 0);
 	sha1algo(message, data, &sha);

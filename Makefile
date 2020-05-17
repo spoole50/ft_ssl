@@ -31,6 +31,9 @@ libft:
 $(NAME): libft $(OBJS)
 	@$(CC) $(CFLAGS) -I$(INCL) -I$(LIBFT) $(SRCS) $(LIBFT)/$(LIBFTA) -o $(NAME)
 
+noflag: libft $(OBJS)
+	@$(CC) -I$(INCL) -I$(LIBFT) $(SRCS) $(LIBFT)/$(LIBFTA) -o $(NAME)
+	
 clean:
 	@make -C $(LIBFT) clean
 

@@ -61,11 +61,7 @@ void			queue_add(t_queue **begin, t_queue *temp)
 void			q_init(t_queue **begin, char *name, int size, int isfile)
 {
 	t_queue		*temp;
-	int			i;
-	int			x;
-
-	i = 0;
-	x = 0;
+	
 	if ((temp = (t_queue*)malloc(sizeof(t_queue))) == NULL)
 		err(*begin, "t_queue initialization error");
 	temp->index = 1;

@@ -22,7 +22,7 @@
 # define SIGMA0(x) (ROTR64(x, 1) ^ ROTR64(x, 8) ^ (x >> 7))
 # define SIGMA1(x) (ROTR64(x, 19) ^ ROTR64(x, 61) ^ (x >> 6))
 
-static uint64_t g_consts512[80] = {
+static const uint64_t g_consts512[80] = {
 	0x428a2f98d728ae22, 0x7137449123ef65cd,
 	0xb5c0fbcfec4d3b2f, 0xe9b5dba58189dbbc,
 	0x3956c25bf348b538, 0x59f111f1b605d019,
