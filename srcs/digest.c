@@ -105,6 +105,8 @@ void				process_message(t_ssl *ssl)
 	temp = ssl->begin;
 	while (temp != NULL)
 	{
+		if (temp->byte_size == 0 && temp->is_file == TRUE)
+			digest(ssl->mode, temp, 0);
 		if (temp->byte_size != 0 && temp->is_file == TRUE)
 			digest(ssl->mode, temp, 1);
 		temp = temp->next;
